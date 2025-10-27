@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { signToken } from "@/lib/jwt";
 
 export async function POST(request: Request) {
-  const { email, password } = await request.json();
+  const { documentNumber, password } = await request.json();
 
-  if (email === "demo@user.com" && password === "123456") {
-    const token = await signToken({ email });
+  if (documentNumber === "12345678" && password === "password") {
+    const token = await signToken({ documentNumber });
 
     const response = NextResponse.json({ message: "Login successful" });
     response.cookies.set("token", token, {
