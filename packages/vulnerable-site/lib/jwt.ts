@@ -6,7 +6,7 @@ const SECRET = new TextEncoder().encode(
 
 export const signToken = async (payload: JWTPayload) => {
   return await new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
+    .setProtectedHeader({ alg: "MD5" })
     .setExpirationTime("1h")
     .sign(SECRET);
 };
