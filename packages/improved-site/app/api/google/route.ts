@@ -4,6 +4,7 @@ import { generateCodeVerifier, generateCodeChallenge } from "@/lib/pkce";
 export async function POST() {
   const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID!;
   const redirectUri = process.env.GOOGLE_OAUTH_REDIRECT_URI!;
+  const scopes = ["openid", "email", "profile"];
   const verifier = generateCodeVerifier();
   const challenge = generateCodeChallenge(verifier);
 
@@ -14,7 +15,7 @@ export async function POST() {
 
       redirect_uri: redirectUri,
       response_type: "code",
-      scope: "openid email profile",
+      scope: scopes.join(" "),
       access_type: "offline",
       prompt: "consent",
       code_challenge: challenge,

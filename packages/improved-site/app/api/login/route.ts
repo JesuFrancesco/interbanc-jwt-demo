@@ -7,8 +7,8 @@ export async function POST(request: Request) {
   if (documentNumber === "12345678" && password === "password") {
     const token = await signToken({ documentNumber });
 
-    const response = NextResponse.json({ message: "Login successful" });
-    response.cookies.set("token", token, {
+    const response = NextResponse.json({ message: "Inicio de sesión exitoso" });
+    response.cookies.set("interbanc_access_token", token, {
       httpOnly: true,
       sameSite: "strict",
       secure: process.env.NODE_ENV === "production",
@@ -19,5 +19,8 @@ export async function POST(request: Request) {
     return response;
   }
 
-  return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+  return NextResponse.json(
+    { error: "Credenciales inválidas" },
+    { status: 401 }
+  );
 }
