@@ -11,7 +11,14 @@ export async function GET(request: Request) {
     });
   }
 
-  const payload = verifyToken(token);
+  const payload = await verifyToken(token);
+
+  if (!payload) {
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
   return new Response(
     JSON.stringify({ message: "Authenticated", user: payload }),

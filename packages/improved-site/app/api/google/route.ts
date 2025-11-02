@@ -14,7 +14,6 @@ export async function POST() {
     .update(crypto.randomBytes(32))
     .digest("hex");
 
-  // Store verifier in HttpOnly cookie (server-side only)
   const res = NextResponse.redirect(
     `https://accounts.google.com/o/oauth2/v2/auth?${new URLSearchParams({
       client_id: clientId,

@@ -1,8 +1,8 @@
 import { JWTPayload, SignJWT, decodeJwt, jwtVerify } from "jose";
-import crypto from "crypto-es";
+// import crypto from "crypto-js";
 
-const SECRET = "clave-secreta-muy-segura-12345";
-const SECRET_KEY = new TextEncoder().encode(crypto.MD5(SECRET).toString());
+const SECRET_KEY = new TextEncoder().encode("123456789");
+// const SECRET_KEY = new TextEncoder().encode(crypto.MD5("123456789").toString());
 
 export const getPayload = (token: string) => {
   return decodeJwt(token);
