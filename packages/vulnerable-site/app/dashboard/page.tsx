@@ -1,5 +1,8 @@
 import { getPayload } from "@/lib/jwt";
 import { cookies } from "next/headers";
+import { LogoutButton } from "./components/logout-button";
+import interbancLogo from "@/public/interbanc.png";
+import Image from "next/image";
 
 export default async function DashboardPage({
   searchParams,
@@ -15,11 +18,18 @@ export default async function DashboardPage({
   const { documentNumber } = payload;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col gap-y-4 items-center justify-center min-h-screen">
       <h1 className="text-2xl font-bold">
         Bienvenido de vuelta {documentNumber as string}
       </h1>
-      <p className="text-gray-600 mt-2">
+
+      <Image
+        src={interbancLogo}
+        alt="Interbanc Logo"
+        className="w-32 h-32 rounded-2xl hover:scale-105 transition-transform"
+      />
+
+      <p className="text-gray-600">
         Solo puedes ver esto si has iniciado sesión.
       </p>
       {hasGoogle ? (
@@ -38,15 +48,13 @@ export default async function DashboardPage({
           </div>
         </article>
       ) : (
-        <form action="/api/google" method="POST" className="mt-4">
-          <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+        <form action="/api/google" method="POST">
+          <button className="hover:cursor-pointer px-4 py-2 bg-blue-500 text-white rounded">
             Conectar con Google
           </button>
         </form>
       )}
-      <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded">
-        Cerrar sesión
-      </button>
+      <LogoutButton />
     </div>
   );
 }
