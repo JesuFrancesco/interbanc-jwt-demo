@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateCodeVerifier, generateCodeChallenge } from "@/lib/pkce";
+import crypto from "crypto";
 
 export async function POST() {
   const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID!;
@@ -8,11 +9,15 @@ export async function POST() {
   const verifier = generateCodeVerifier();
   const challenge = generateCodeChallenge(verifier);
 
+  const state = crypto
+    .createHash("sha256")
+    .update(crypto.randomBytes(32))
+    .digest("hex");
+
   // Store verifier in HttpOnly cookie (server-side only)
   const res = NextResponse.redirect(
     `https://accounts.google.com/o/oauth2/v2/auth?${new URLSearchParams({
       client_id: clientId,
-
       redirect_uri: redirectUri,
       response_type: "code",
       scope: scopes.join(" "),
@@ -20,6 +25,7 @@ export async function POST() {
       prompt: "consent",
       code_challenge: challenge,
       code_challenge_method: "S256",
+      state: state,
     }).toString()}`
   );
 
