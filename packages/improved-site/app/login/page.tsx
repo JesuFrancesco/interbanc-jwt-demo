@@ -1,21 +1,40 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Eye, EyeOff } from "lucide-react"
-import paracasBG from "@/public/paracas-bg-hd.jpg"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import paracasBG from "@/public/paracas-bg-hd.jpg";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function InterbankLogin() {
-  const router = useRouter()
-  const [showPassword, setShowPassword] = useState(false)
-  const [documentNumber, setDocumentNumber] = useState("")
-  const [password, setPassword] = useState("")
-  const [rememberDocument, setRememberDocument] = useState(false)
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
-   const handleSubmit = async (e: React.FormEvent) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [documentNumber, setDocumentNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberDocument, setRememberDocument] = useState(false);
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      const res = await fetch("/api/auth/me");
+      if (res.ok) {
+        router.push("/dashboard");
+      } else {
+        setLoading(false);
+      }
+    };
+
+    try {
+      verifyUser();
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await fetch("/api/login", {
       method: "POST",
@@ -26,18 +45,23 @@ export default function InterbankLogin() {
 
     if (res.ok) router.push("/dashboard");
     else alert("Credenciales incorrectas");
-    // else {
-    //   const data = await res.json()
-    //   alert(data.error);
-    // }
   };
-
 
   return (
     <div className="min-h-screen w-full relative overflow-hidden">
+      {/* Loader */}
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm z-30">
+          <p className="text-gray-500 text-lg">Cargando...</p>
+        </div>
+      )}
+
       {/* Background Image */}
-      
-      <Image className="h-screen bg-container bg-no-repeat bg-top" src={paracasBG} alt="no hay"  />
+      <Image
+        className="h-screen bg-container bg-no-repeat bg-top"
+        src={paracasBG}
+        alt="no hay bg"
+      />
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-400/20 to-transparent" />
@@ -45,7 +69,9 @@ export default function InterbankLogin() {
       {/* Logo */}
       <div className="absolute top-8 right-8 z-20 flex items-center gap-2">
         <div className="w-8 h-8 bg-blue-600 rounded" />
-        <span className="text-white text-2xl font-bold">Interbanc 🗣️🗣️🗣️🗣️</span>
+        <span className="text-white text-2xl font-bold">
+          Interbanc 🗣️🗣️🗣️🗣️
+        </span>
       </div>
 
       {/* Form Card */}
@@ -104,7 +130,10 @@ export default function InterbankLogin() {
                 onChange={(e) => setRememberDocument(e.target.checked)}
                 className="w-4 h-4 border border-gray-300 rounded cursor-pointer"
               />
-              <label htmlFor="remember" className="text-sm text-gray-700 cursor-pointer">
+              <label
+                htmlFor="remember"
+                className="text-sm text-gray-700 cursor-pointer"
+              >
                 Recordar documento
               </label>
             </div>
@@ -135,5 +164,5 @@ export default function InterbankLogin() {
         </div>
       </div>
     </div>
-  )
+  );
 }

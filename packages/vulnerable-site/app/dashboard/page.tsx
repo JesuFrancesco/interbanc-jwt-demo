@@ -33,7 +33,7 @@ export default async function DashboardPage({
         Solo puedes ver esto si has iniciado sesión.
       </p>
       {hasGoogle ? (
-        <article className="border-4 border-white rounded-2xl p-4 justify-center ">
+        <article className="border-4 rounded-2xl p-4 justify-center ">
           <h2 className="text-xl font-semibold">Información de Google</h2>
           <div className="flex flex-row justify-around gap-x-4 items-center">
             <img
